@@ -18,20 +18,34 @@ public class Player : MonoBehaviour {
     private GameObject _hatch;
     [SerializeField]
     private GameObject _uziPickupText;
+    [SerializeField]
+    private GameObject _camera;
+    [SerializeField]
+    private float _fallMultiplier = 2.5f;
+    [SerializeField]
+    private float _lowJumpMultiplier = 2f;
+
+    [SerializeField]
+    [Range(1, 20)]
+    private float _jumpVelocity = 10;
 
     public bool isGrounded;
+
+    private Rigidbody rb;
 
     public void OnCollisionEnter(Collision collision) {
         if (collision.collider.tag == "Ground") {
             isGrounded = true;
-        } else {
-            isGrounded = false;
         }
 
         if (collision.collider.tag == "Ghost") {
-            transform.position = new Vector3(transform.position.x, -20, transform.position.z);
+            _camera.transform.position = new Vector3(transform.position.x, -30, transform.position.z);
             _restart.SetActive(true);
         }
+    }
+
+    public void OnCollisionExit(Collision collision) {
+        isGrounded = false;
     }
 
     public void OnCollisionStay(Collision collision) {
@@ -48,17 +62,22 @@ public class Player : MonoBehaviour {
     }
 
     void Update() {
+        Jump();
         if (transform.position.y >= 16) {
             transform.position = new Vector3(transform.position.x, 8, transform.position.z);
         }
 
-        Jump();
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
         transform.position += movement * Time.deltaTime * _moveSpeed;
     }
+
     void Jump() {
-        if (Input.GetButton("Jump") && isGrounded == true) {
-            gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 5f, 0f), ForceMode.Impulse);
+        if (isGrounded == true) {
+            rb = GetComponent<Rigidbody>();
+            if (Input.GetButtonDown("Jump")) {
+                GetComponent<Rigidbody>().velocity = Vector3.up * _jumpVelocity;
+                rb.velocity += Vector3.up * Physics.gravity.y * (_fallMultiplier - 1) * Time.deltaTime;
+            }
         }
     }
 
