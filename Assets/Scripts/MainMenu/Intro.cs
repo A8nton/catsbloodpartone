@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Intro : MonoBehaviour {
 
@@ -10,6 +11,6 @@ public class Intro : MonoBehaviour {
 
     IEnumerator Intr() {
         yield return new WaitForSeconds(8f);
-        Application.LoadLevel(0);
+        SceneManager.LoadScene(0);
     }
 }

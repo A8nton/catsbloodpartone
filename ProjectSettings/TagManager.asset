@@ -7,6 +7,11 @@ TagManager:
   - Ground
   - Ghost
   - Hatch
+  - Bullet
+  - Boss
+  - Fall
+  - Rocket
+  - Earth
   layers:
   - Default
   - TransparentFX
